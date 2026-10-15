@@ -1,0 +1,37 @@
+{% extends "store/base.html" %}
+{% block title %}Reviews{% endblock %}
+{% block content %}
+<h1>Reviews of my products</h1>
+<form method="get" style="margin-bottom:1rem">
+  <label>Store
+    <select name="store">
+      <option value="">All stores</option>
+      {% for s in stores %}<option value="{{ s.pk }}" {% if s.pk|stringformat:"d" == selected_store %}selected{% endif %}>{{ s.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Product
+    <select name="product">
+      <option value="">All products</option>
+      {% for p in products %}<option value="{{ p.pk }}" {% if p.pk|stringformat:"d" == selected_product %}selected{% endif %}>{{ p.name }} ({{ p.store.name }})</option>{% endfor %}
+    </select>
+  </label>
+  <button class="btn" type="submit">Filter</button>
+  <a class="btn secondary" href="{% url 'vendor_reviews' %}">Clear</a>
+</form>
+<p>{{ reviews|length }} review{{ reviews|length|pluralize }}</p>
+<table>
+  <tr><th>Store</th><th>Product</th><th>Rating</th><th>Review</th><th>Buyer</th><th>Date</th></tr>
+  {% for r in reviews %}
+    <tr>
+      <td>{{ r.product.store.name }}</td>
+      <td><a href="{% url 'product_detail' r.product.pk %}">{{ r.product.name }}</a></td>
+      <td>{{ r.rating }}/5 {% if r.verified %}<span class="badge verified">Verified</span>{% else %}<span class="badge">Unverified</span>{% endif %}</td>
+      <td>{{ r.comment }}</td>
+      <td>{{ r.buyer.username }}</td>
+      <td>{{ r.created_at|date:"d M Y H:i" }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6">No reviews found.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

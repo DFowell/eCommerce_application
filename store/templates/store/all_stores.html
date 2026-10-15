@@ -1,0 +1,18 @@
+{% extends "store/base.html" %}
+{% block title %}Stores{% endblock %}
+{% block content %}
+<h1>Stores</h1>
+<p>Choose a store to see its products.</p>
+<table>
+  <tr><th>Store</th><th>Vendor</th><th>Products</th></tr>
+  {% for s in stores %}
+    <tr>
+      <td><a href="{% url 'store_products' s.pk %}">{{ s.name }}</a></td>
+      <td><a href="{% url 'vendor_stores' s.vendor.pk %}">{{ s.vendor.username }}</a></td>
+      <td>{{ s.product_count }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="3">No stores yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "store/base.html" %}
+{% block title %}Invoice #{{ order.pk }}{% endblock %}
+{% block content %}
+<h1>Invoice – order #{{ order.pk }}</h1>
+<p>{{ order.created_at|date:"d M Y H:i" }}</p>
+<table>
+  <tr><th>Item</th><th>Unit price</th><th>Qty</th><th>Line total</th></tr>
+  {% for i in order.items.all %}
+    <tr><td>{{ i.product_name }}</td><td>£{{ i.unit_price }}</td><td>{{ i.quantity }}</td><td>£{{ i.line_total }}</td></tr>
+  {% endfor %}
+  <tr><th colspan="3">Total</th><th>£{{ order.total }}</th></tr>
+</table>
+<p><a href="{% url 'order_list' %}">All orders</a></p>
+{% endblock %}

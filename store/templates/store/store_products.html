@@ -1,0 +1,17 @@
+{% extends "store/base.html" %}
+{% block title %}{{ store.name }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'vendor_stores' store.vendor.pk %}">&larr; Stores of {{ store.vendor.username }}</a> &middot; <a href="{% url 'all_stores' %}">All stores</a></p>
+<h1>{{ store.name }}</h1>
+<p>{{ store.description|linebreaksbr }}</p>
+<div class="grid">
+  {% for p in products %}
+    <div class="card">
+      <h3><a href="{% url 'product_detail' p.pk %}">{{ p.name }}</a></h3>
+      <p><strong>£{{ p.price }}</strong> &middot; {% if p.stock %}{{ p.stock }} in stock{% else %}Out of stock{% endif %}</p>
+    </div>
+  {% empty %}
+    <p>This store has no products yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "store/base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<h1>{{ product.name }}</h1>
+<p>Sold by <a href="{% url 'store_products' product.store.pk %}">{{ product.store.name }}</a>
+  (vendor <a href="{% url 'vendor_stores' product.store.vendor.pk %}">{{ product.store.vendor.username }}</a>)</p>
+<p>{{ product.description|linebreaksbr }}</p>
+<p><strong>£{{ product.price }}</strong> &middot; {% if product.stock %}{{ product.stock }} in stock{% else %}Out of stock{% endif %}</p>
+
+{% if user.is_authenticated and user.is_buyer and product.stock %}
+  <form method="post" action="{% url 'cart_add' product.pk %}" class="inline">
+    {% csrf_token %}
+    <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+    <button class="btn" type="submit">Add to cart</button>
+  </form>
+{% elif not user.is_authenticated %}
+  <p><a href="{% url 'login' %}">Log in</a> as a buyer to purchase.</p>
+{% endif %}
+
+<h2>Reviews</h2>
+{% for r in reviews %}
+  <div class="card" style="margin-bottom:.5rem">
+    <strong>{{ r.rating }}/5</strong> by {{ r.buyer.username }}
+    {% if r.verified %}<span class="badge verified">Verified purchase</span>{% else %}<span class="badge">Unverified</span>{% endif %}
+    <small>&middot; {{ r.created_at|date:"d M Y H:i" }}</small>
+    <p>{{ r.comment|linebreaksbr }}</p>
+  </div>
+{% empty %}
+  <p>No reviews yet.</p>
+{% endfor %}
+
+{% if review_form %}
+  <h3>Leave a review</h3>
+  <p><small>You can review this product more than once; each review is kept as a record of your opinion at that time.</small></p>
+  <form method="post" action="{% url 'review_create' product.pk %}">
+    {% csrf_token %}{{ review_form.as_p }}
+    <button class="btn" type="submit">Submit review</button>
+  </form>
+{% endif %}
+{% endblock %}

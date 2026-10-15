@@ -1,0 +1,17 @@
+{% extends "store/base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<h1>Products</h1>
+<form method="get"><input type="search" name="q" value="{{ query }}" placeholder="Search products or stores"> <button class="btn" type="submit">Search</button></form>
+<div class="grid" style="margin-top:1rem">
+  {% for p in products %}
+    <div class="card">
+      <h3><a href="{% url 'product_detail' p.pk %}">{{ p.name }}</a></h3>
+      <p>Sold by <a href="{% url 'store_products' p.store.pk %}">{{ p.store.name }}</a></p>
+      <p><strong>£{{ p.price }}</strong> &middot; {% if p.stock %}{{ p.stock }} in stock{% else %}Out of stock{% endif %}</p>
+    </div>
+  {% empty %}
+    <p>No products found.</p>
+  {% endfor %}
+</div>
+{% endblock %}

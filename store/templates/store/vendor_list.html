@@ -1,0 +1,14 @@
+{% extends "store/base.html" %}
+{% block title %}Vendors{% endblock %}
+{% block content %}
+<h1>Vendors</h1>
+<p>Choose a vendor to see their stores.</p>
+<table>
+  <tr><th>Vendor</th><th>Stores</th></tr>
+  {% for v in vendors %}
+    <tr><td><a href="{% url 'vendor_stores' v.pk %}">{{ v.username }}</a></td><td>{{ v.store_count }}</td></tr>
+  {% empty %}
+    <tr><td colspan="2">No vendors yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

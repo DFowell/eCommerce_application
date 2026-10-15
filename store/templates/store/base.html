@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Shop{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; color: #222; background: #fafafa; }
+    nav { background: #1f2a44; padding: .75rem 1.5rem; display: flex; gap: 1.25rem; align-items: center; }
+    nav a, nav button { color: #fff; text-decoration: none; background: none; border: 0; font: inherit; cursor: pointer; }
+    nav .spacer { flex: 1; }
+    main { max-width: 960px; margin: 1.5rem auto; padding: 0 1rem; }
+    .messages { list-style: none; padding: 0; }
+    .messages li { padding: .6rem 1rem; margin-bottom: .5rem; border-radius: 4px; background: #e8eefc; }
+    .messages .success { background: #e3f6e8; } .messages .error { background: #fde4e4; } .messages .warning { background: #fff3d6; }
+    table { border-collapse: collapse; width: 100%; background: #fff; }
+    th, td { border-bottom: 1px solid #ddd; padding: .5rem; text-align: left; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .card { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 1rem; }
+    .badge { font-size: .75rem; padding: .1rem .5rem; border-radius: 999px; background: #ddd; }
+    .badge.verified { background: #cdeed6; }
+    .btn { display: inline-block; padding: .4rem .9rem; border: 1px solid #1f2a44; border-radius: 4px; background: #1f2a44; color: #fff; text-decoration: none; cursor: pointer; font: inherit; }
+    .btn.secondary { background: #fff; color: #1f2a44; } .btn.danger { background: #b3261e; border-color: #b3261e; }
+    .errorlist { color: #b3261e; padding-left: 1rem; }
+    form p { margin: .6rem 0; } form label { display: block; font-weight: 600; }
+    form input, form select, form textarea { width: 100%; max-width: 420px; padding: .4rem; box-sizing: border-box; }
+    .inline { display: inline; } .inline input { width: 4rem; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="{% url 'home' %}"><strong>eCommerce</strong></a>
+  {% if user.is_authenticated and user.is_vendor %}
+    <a href="{% url 'store_list' %}">My stores</a>
+    <a href="{% url 'home' %}">Shop</a>
+    <a href="{% url 'vendor_reviews' %}">Reviews</a>
+    <a href="{% url 'reddit_feed' %}">Reddit</a>
+  {% else %}
+    <a href="{% url 'home' %}">Products</a>
+    <a href="{% url 'vendor_list' %}">Vendors</a>
+    <a href="{% url 'all_stores' %}">Stores</a>
+    <a href="{% url 'reddit_feed' %}">Reddit</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'cart' %}">Cart ({{ cart_count }})</a>
+      <a href="{% url 'order_list' %}">My orders</a>
+    {% endif %}
+  {% endif %}
+  <span class="spacer"></span>
+  {% if user.is_authenticated %}
+    <span style="color:#cbd5f0">{{ user.username }} ({{ user.role }})</span>
+    <form method="post" action="{% url 'logout' %}" class="inline">{% csrf_token %}<button type="submit">Logout</button></form>
+  {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+  {% endif %}
+</nav>
+<main>
+  {% if messages %}
+    <ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

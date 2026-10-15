@@ -1,0 +1,11 @@
+{% extends "store/base.html" %}
+{% block title %}Confirm delete{% endblock %}
+{% block content %}
+<h1>Delete {{ kind }}?</h1>
+<p>Are you sure you want to delete <strong>{{ object }}</strong>?{% if kind == "store" %} All its products will be deleted too.{% endif %} This cannot be undone.</p>
+<form method="post">
+  {% csrf_token %}
+  <button class="btn danger" type="submit">Yes, delete</button>
+  <a class="btn secondary" href="{{ cancel_url }}">Cancel</a>
+</form>
+{% endblock %}

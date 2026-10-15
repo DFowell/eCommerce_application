@@ -1,0 +1,21 @@
+{% extends "store/base.html" %}
+{% block title %}Your cart{% endblock %}
+{% block content %}
+<h1>Your cart</h1>
+{% if lines %}
+<table>
+  <tr><th>Product</th><th>Qty</th><th>Line total</th><th></th></tr>
+  {% for l in lines %}
+    <tr>
+      <td><a href="{% url 'product_detail' l.product.pk %}">{{ l.product.name }}</a> <small>({{ l.product.store.name }})</small></td>
+      <td>{{ l.quantity }}</td><td>£{{ l.line_total }}</td>
+      <td><form method="post" action="{% url 'cart_remove' l.product.pk %}" class="inline">{% csrf_token %}<button class="btn secondary" type="submit">Remove</button></form></td>
+    </tr>
+  {% endfor %}
+  <tr><th colspan="2">Total</th><th colspan="2">£{{ total }}</th></tr>
+</table>
+<form method="post" action="{% url 'checkout' %}" style="margin-top:1rem">{% csrf_token %}<button class="btn" type="submit">Checkout</button></form>
+{% else %}
+  <p>Your cart is empty. <a href="{% url 'home' %}">Browse products</a>.</p>
+{% endif %}
+{% endblock %}

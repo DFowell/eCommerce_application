@@ -1,0 +1,13 @@
+{% extends "store/base.html" %}
+{% block title %}r/{{ subreddit }}{% endblock %}
+{% block content %}
+<h1>Latest posts from r/{{ subreddit }}</h1>
+{% for post in posts %}
+  <div class="card" style="margin-bottom:.5rem">
+    <h3 style="margin:0 0 .3rem"><a href="{{ post.url }}" target="_blank" rel="noopener noreferrer">{{ post.title }}</a></h3>
+    <small>by u/{{ post.author }} &middot; {{ post.score }} points</small>
+  </div>
+{% empty %}
+  <p>No posts to show.</p>
+{% endfor %}
+{% endblock %}

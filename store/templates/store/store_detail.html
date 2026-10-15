@@ -1,0 +1,22 @@
+{% extends "store/base.html" %}
+{% block title %}{{ store.name }}{% endblock %}
+{% block content %}
+<h1>{{ store.name }}</h1>
+<p>{{ store.description|linebreaksbr }}</p>
+<p>
+  <a class="btn" href="{% url 'product_create' store.pk %}">Add product</a>
+  <a class="btn secondary" href="{% url 'store_edit' store.pk %}">Edit store</a>
+  <a class="btn secondary" href="{% url 'store_list' %}">Back</a>
+</p>
+<table>
+  <tr><th>Product</th><th>Price</th><th>Stock</th><th></th></tr>
+  {% for p in products %}
+    <tr>
+      <td><a href="{% url 'product_detail' p.pk %}">{{ p.name }}</a></td><td>£{{ p.price }}</td><td>{{ p.stock }}</td>
+      <td><a href="{% url 'product_edit' p.pk %}">Edit</a> &middot; <a href="{% url 'product_delete' p.pk %}">Remove</a></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4">No products yet.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}
